@@ -53,12 +53,13 @@ group :development, :test do
 end
 
 group :development do
+  gem 'rubocop', require: false
   gem 'guard'
   gem 'guard-rspec'
+  gem 'guard-rubocop'
   gem 'guard-livereload', require: false
   gem 'rack-livereload'
   gem 'coolline'
   gem 'terminal-notifier-guard'
   gem 'better_errors'
 end
-

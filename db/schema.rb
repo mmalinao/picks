@@ -11,10 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150227020731) do
+ActiveRecord::Schema.define(version: 20150227021128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "slack_channels", force: :cascade do |t|
+    t.string   "slack_id"
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "slack_channels", ["slack_id"], name: "index_slack_channels_on_slack_id", using: :btree
 
   create_table "slack_teams", force: :cascade do |t|
     t.string   "slack_id"

@@ -5,7 +5,7 @@ FactoryGirl.define do
     token { Faker::Lorem.characters(24) }
     team_id { "T#{Faker::Number.number(4)}" }
     channel_id { "C#{Faker::Number.number(10)}" }
-    channel_name { Faker::App.name }
+    channel_name { SlackChannel.sports_types.to_a.sample(1).flatten.first }
     user_id { "U#{Faker::Number.number(10)}" }
     user_name { Faker::Name.name }
     command { "/pick" }

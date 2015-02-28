@@ -1,4 +1,4 @@
 class ApplicationController < ActionController::API
   include ActionController::Serialization
-  respond_with :json
+  respond_to :json
 end

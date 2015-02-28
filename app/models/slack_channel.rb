@@ -1,5 +1,6 @@
 class SlackChannel < ActiveRecord::Base
   belongs_to :slack_team
+  has_and_belongs_to_many :slack_users
 
   validates :slack_id, :slack_team, :sports_type, presence: true
   validates :slack_id, uniqueness: true

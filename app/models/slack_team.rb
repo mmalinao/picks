@@ -1,5 +1,6 @@
 class SlackTeam < ActiveRecord::Base
   has_many :slack_channels
+  has_many :slack_users, through: :slack_channels
 
   validates :slack_id, :token, presence: true
 

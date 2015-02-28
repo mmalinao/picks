@@ -6,6 +6,7 @@ RSpec.describe SlackChannel, type: :model do
   it { is_expected.to validate_presence_of :slack_id }
   it { is_expected.to validate_presence_of :slack_team }
   it { is_expected.to validate_presence_of :sports_type }
+  it { is_expected.to validate_uniqueness_of :slack_id }
 
   describe '.sports_channel_for' do
     subject(:do_action) { SlackChannel.sports_channel_for(slack_team, slack_id, sports_type) }
@@ -32,6 +33,10 @@ RSpec.describe SlackChannel, type: :model do
     it 'should create a new SlackChannel associated with slack team' do
       do_action
       expect(new_channel.slack_team).to eq slack_team
+    end
+
+    it 'should return a SlackChannel' do
+      expect(do_action).to be_kind_of SlackChannel
     end
 
     context 'when SlackChannel already exists' do

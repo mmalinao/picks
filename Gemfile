@@ -66,3 +66,7 @@ group :development do
   gem 'terminal-notifier-guard'
   gem 'better_errors'
 end
+
+group :test do
+  gem 'simplecov', require: false
+end

@@ -6,6 +6,8 @@ RSpec.describe SlackTeam, type: :model do
 
   it { is_expected.to validate_presence_of :slack_id }
   it { is_expected.to validate_presence_of :token }
+  it { is_expected.to validate_presence_of :domain }
+  it { is_expected.to validate_uniqueness_of :domain }
 
   describe '.authenticate_with_token' do
     subject { SlackTeam.authenticate_with_token(slack_id, token) }

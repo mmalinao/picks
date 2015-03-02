@@ -6,7 +6,8 @@ module Api
         @slack_user = SlackUser.where(slack_id: params[:user_id], name: params[:user_name]).first_or_create
         # @slack_user = SlackUser.where(slack_team)
         # @pick = Pick.new()
-        render json: { text: 'hello world!' }
+        # render json: { text: 'hello world!' }
+        render text: 'Hello World!'
       end
     end
   end

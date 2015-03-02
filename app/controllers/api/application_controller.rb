@@ -2,7 +2,7 @@ module Api
   class ApplicationController < ActionController::API
     include ActionController::Serialization
     before_action :authenticate_slack_team!
-    respond_to :json
+    respond_to :json, :text
 
     private
 

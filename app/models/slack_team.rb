@@ -9,4 +9,8 @@ class SlackTeam < ActiveRecord::Base
     team = SlackTeam.find_by_domain(domain)
     team && Devise.secure_compare(team.token, token) ? team : nil
   end
+
+  def domain=(domain)
+    write_attribute(:domain, domain.to_s.downcase)
+  end
 end

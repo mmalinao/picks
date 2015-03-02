@@ -29,4 +29,15 @@ RSpec.describe SlackTeam, type: :model do
       it { is_expected.to be_nil }
     end
   end
+
+  describe '#domain=' do
+    subject(:do_set) { slack_team.domain = new_domain }
+
+    let!(:slack_team) { FactoryGirl.create(:slack_team) }
+    let(:new_domain) { 'NewDomain' }
+
+    it 'should downcase domain' do
+      expect { do_set }.to change { slack_team.domain }.to('newdomain')
+    end
+  end
 end

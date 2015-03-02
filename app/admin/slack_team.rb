@@ -1,10 +1,10 @@
 ActiveAdmin.register SlackTeam do
-  permit_params :token, :slack_id
+  permit_params :token, :domain
 
   form do |f|
     inputs 'Details' do
-      input :slack_id
       input :token
+      input :domain
     end
     actions
   end

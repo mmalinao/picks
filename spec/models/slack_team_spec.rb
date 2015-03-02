@@ -10,18 +10,18 @@ RSpec.describe SlackTeam, type: :model do
   it { is_expected.to validate_uniqueness_of :domain }
 
   describe '.authenticate_with_token' do
-    subject { SlackTeam.authenticate_with_token(slack_id, token) }
+    subject { SlackTeam.authenticate_with_token(domain, token) }
 
     let!(:slack_team) { FactoryGirl.create(:slack_team) }
-    let(:slack_id) { slack_team.slack_id }
+    let(:domain) { slack_team.domain }
     let(:token) { slack_team.token }
 
     it 'should return existing slack team' do
       is_expected.to eq slack_team
     end
 
-    context 'when slack team does not exist with given slack_id' do
-      let(:slack_id) { 'foo' }
+    context 'when slack team does not exist with given domain' do
+      let(:domain) { 'foo' }
       it { is_expected.to be_nil }
     end
 

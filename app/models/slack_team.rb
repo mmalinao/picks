@@ -5,8 +5,8 @@ class SlackTeam < ActiveRecord::Base
   validates :slack_id, :domain, :token, presence: true
   validates :domain, uniqueness: true
 
-  def self.authenticate_with_token(slack_id, token)
-    team = SlackTeam.find_by_slack_id(slack_id)
+  def self.authenticate_with_token(domain, token)
+    team = SlackTeam.find_by_domain(domain)
     team && Devise.secure_compare(team.token, token) ? team : nil
   end
 end

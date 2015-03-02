@@ -4,7 +4,6 @@ RSpec.describe SlackTeam, type: :model do
   it { is_expected.to have_many :slack_channels }
   it { is_expected.to have_many(:slack_users).through(:slack_channels) }
 
-  it { is_expected.to validate_presence_of :slack_id }
   it { is_expected.to validate_presence_of :token }
   it { is_expected.to validate_presence_of :domain }
   it { is_expected.to validate_uniqueness_of :domain }

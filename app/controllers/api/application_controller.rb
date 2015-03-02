@@ -15,7 +15,7 @@ module Api
     end
 
     def authenticate_slack_team!
-      @current_slack_team = SlackTeam.authenticate_with_token(params[:team_id], params[:token])
+      @current_slack_team = SlackTeam.authenticate_with_token(params[:team_domain], params[:token])
       access_denied! if @current_slack_team.nil?
     end
   end

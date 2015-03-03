@@ -1,7 +1,7 @@
 class SlackChannel < ActiveRecord::Base
   self.primary_key = 'sid'
   belongs_to :slack_team
-  has_and_belongs_to_many :slack_users
+  has_and_belongs_to_many :slack_users, association_foreign_key: :slack_channel_sid, foreign_key: :slack_user_sid
 
   validates :slack_team, :sports_type, presence: true
 

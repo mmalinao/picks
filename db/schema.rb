@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150302004100) do
+ActiveRecord::Schema.define(version: 20150303011000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,10 +85,14 @@ ActiveRecord::Schema.define(version: 20150302004100) do
   create_table "slack_channels_users", id: false, force: :cascade do |t|
     t.integer "slack_channel_id"
     t.integer "slack_user_id"
+    t.integer "slack_channel_slack_id"
+    t.integer "slack_user_slack_id"
   end
 
   add_index "slack_channels_users", ["slack_channel_id"], name: "index_slack_channels_users_on_slack_channel_id", using: :btree
+  add_index "slack_channels_users", ["slack_channel_slack_id"], name: "index_slack_channels_users_on_slack_channel_slack_id", using: :btree
   add_index "slack_channels_users", ["slack_user_id"], name: "index_slack_channels_users_on_slack_user_id", using: :btree
+  add_index "slack_channels_users", ["slack_user_slack_id"], name: "index_slack_channels_users_on_slack_user_slack_id", using: :btree
 
   create_table "slack_teams", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -100,14 +104,14 @@ ActiveRecord::Schema.define(version: 20150302004100) do
   add_index "slack_teams", ["domain"], name: "index_slack_teams_on_domain", using: :btree
   add_index "slack_teams", ["token"], name: "index_slack_teams_on_token", using: :btree
 
-  create_table "slack_users", force: :cascade do |t|
-    t.string   "slack_id"
+  create_table "slack_users", id: false, force: :cascade do |t|
+    t.string   "sid",        null: false
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  add_index "slack_users", ["slack_id"], name: "index_slack_users_on_slack_id", using: :btree
+  add_index "slack_users", ["sid"], name: "index_slack_users_on_sid", unique: true, using: :btree
 
   create_table "sports_teams", force: :cascade do |t|
     t.string   "type"

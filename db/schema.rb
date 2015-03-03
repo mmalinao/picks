@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150303011000) do
+ActiveRecord::Schema.define(version: 20150303013419) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,15 +71,15 @@ ActiveRecord::Schema.define(version: 20150303011000) do
   add_index "picks", ["slack_user_id"], name: "index_picks_on_slack_user_id", using: :btree
   add_index "picks", ["sports_team_id"], name: "index_picks_on_sports_team_id", using: :btree
 
-  create_table "slack_channels", force: :cascade do |t|
-    t.string   "slack_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+  create_table "slack_channels", id: false, force: :cascade do |t|
+    t.string   "sid",                       null: false
     t.integer  "slack_team_id"
-    t.integer  "sports_type"
+    t.integer  "sports_type",   default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  add_index "slack_channels", ["slack_id"], name: "index_slack_channels_on_slack_id", using: :btree
+  add_index "slack_channels", ["sid"], name: "index_slack_channels_on_sid", unique: true, using: :btree
   add_index "slack_channels", ["slack_team_id"], name: "index_slack_channels_on_slack_team_id", using: :btree
 
   create_table "slack_channels_users", id: false, force: :cascade do |t|

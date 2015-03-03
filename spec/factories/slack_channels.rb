@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :slack_channel do
-    slack_id { "C#{Faker::Number.number(10)}" }
+    sid { "C#{Faker::Number.number(10)}" }
     slack_team
     sports_type { :pucks } # use anything other than the default enum
 

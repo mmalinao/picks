@@ -16,4 +16,20 @@ class SlackChannel < ActiveRecord::Base
   def create_associated_slack_user
     # TODO: need to create join model plus the slack_ids...
   end
+
+  def first_slack_user_or_create(sid, name)
+    user = slack_users.find_by_sid(sid)
+
+    if user.nil?
+      user = SlackUser.find_by_sid(sid)
+      if user
+        slack_users << user
+      else
+        user = slack_users.build(sid: sid, name: name)
+        user.save
+      end
+    end
+
+    user
+  end
 end

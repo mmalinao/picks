@@ -1,0 +1,1 @@
+class PickError < StandardError; end

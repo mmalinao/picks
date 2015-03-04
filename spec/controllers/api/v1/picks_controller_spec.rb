@@ -6,16 +6,23 @@ RSpec.describe Api::V1::PicksController, type: :controller do
 
     let!(:slack_team) { FactoryGirl.create(:slack_team) }
     let!(:slack_channel) { FactoryGirl.create(:slack_channel, slack_team: slack_team) }
-    let!(:slack_user) { FactoryGirl.create(:slack_user) }
+    let!(:slack_user) do
+      u = slack_channel.slack_users.build FactoryGirl.attributes_for(:slack_user)
+      u.save
+      u
+    end
+
+    let!(:nba_team) { FactoryGirl.create(:nba_team, uid: 'LAC') }
 
     let(:params) do
       FactoryGirl.build(:slash_command,
                         token: token,
                         team_domain: slack_team.domain,
-                        channel_id: slack_channel.slack_id,
+                        channel_id: slack_channel.sid,
                         channel_name: slack_channel.sports_type,
-                        user_id: slack_user.slack_id,
-                        user_name: slack_user.name
+                        user_id: slack_user.sid,
+                        user_name: slack_user.name,
+                        text: "LAC by 10"
       )
     end
 
@@ -26,16 +33,24 @@ RSpec.describe Api::V1::PicksController, type: :controller do
       expect(assigns(:slack_channel)).to eq slack_channel
     end
 
+    it 'should not create a new SlackChannel' do
+      expect { do_post }.to_not change { SlackChannel.count }
+    end
+
     it 'should assign @slack_user' do
       do_post
       expect(assigns(:slack_user)).to eq slack_user
     end
 
-    xit 'should create a new Pick' do
+    it 'should not create a new SlackUser' do
+      expect { do_post }.to_not change { SlackUser.count }
+    end
+
+    it 'should create a new Pick' do
       expect { do_post }.to change { Pick.count }.by(1)
     end
 
-    xit 'should assign @pick' do
+    it 'should assign @pick' do
       do_post
       expect(assigns(:pick)).to be_kind_of Pick
     end
@@ -57,22 +72,39 @@ RSpec.describe Api::V1::PicksController, type: :controller do
         do_post
         expect(json_error).to eq 'Access Denied'
       end
+
+      it 'should not create a new Pick' do
+        expect { do_post }.to_not change { Pick.count }
+      end
     end
 
-    # context 'when slack channel does not exist under slack team' do
-    #   let(:channel_id) { 'foo' }
+    context 'when slack channel does not exist' do
+      let(:slack_channel) { FactoryGirl.build(:slack_channel) }
+      let(:new_slack_channel) { SlackChannel.last }
 
-    #   # it 'should create a new SlackChannel' do
-    #   #   expect { do_post }.to change { SlackChannel.count }.by(1)
-    #   # end
+      it 'should create a new SlackChannel' do
+        expect { do_post }.to change { SlackChannel.count }.by(1)
+      end
 
-    #   it 'should assign @slack_channel' do
-    #     do_post
-    #     expect(assigns(:slack_channel)).to_not be_nil
+      it 'should create a new SlackChannel with given params' do
+        do_post
+        expect(new_slack_channel).to have_attributes sid: params[:channel_id], sports_type: params[:channel_name]
+      end
+
+      it 'should create a new SlackChannel associated with SlackTeam' do
+        do_post
+        expect(new_slack_channel.slack_team).to eq slack_team
+      end
+    end
+
+    # context 'when error creating Pick' do
+    #   before(:each) { allow(Pick).to receive(:create_for_user).and_raise(PickError) }
+
+    #   it 'should not create a new Pick' do
+    #     expect { do_post }.to_not change { Pick.count }
     #   end
-    # end
 
-    context 'when slack user does not exist' do
-    end
+    #   it 'should return an error'
+    # end
   end
 end

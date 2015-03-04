@@ -1,5 +1,5 @@
 class Pick < ActiveRecord::Base
-  belongs_to :slack_user
+  belongs_to :slack_user, foreign_key: :slack_user_sid
   belongs_to :sports_team
 
   validates :slack_user, :sports_team, :wins_by, presence: true

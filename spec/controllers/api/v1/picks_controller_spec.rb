@@ -60,6 +60,11 @@ RSpec.describe Api::V1::PicksController, type: :controller do
       expect(response.status).to eq 200
     end
 
+    it 'should return success message to Slack' do
+      do_post
+      expect(response.body).to match(/Submitted your pick!/)
+    end
+
     context 'when authentication failed' do
       let(:token) { 'foo' }
 
@@ -97,14 +102,46 @@ RSpec.describe Api::V1::PicksController, type: :controller do
       end
     end
 
-    # context 'when error creating Pick' do
-    #   before(:each) { allow(Pick).to receive(:create_for_user).and_raise(PickError) }
+    context 'when PickError::InvalidCommand raised' do
+      before(:each) { allow(Pick).to receive(:create_for_user).and_raise PickError::InvalidCommand }
 
-    #   it 'should not create a new Pick' do
-    #     expect { do_post }.to_not change { Pick.count }
-    #   end
+      it 'should return 200' do
+        do_post
+        expect(response.status).to eq 200
+      end
 
-    #   it 'should return an error'
-    # end
+      it 'should return error message to Slack' do
+        do_post
+        expect(response.body).to match(/didn't understand your command/)
+      end
+    end
+
+    context 'when PickError::SportsTeamNotFound raised' do
+      before(:each) { allow(Pick).to receive(:create_for_user).and_raise PickError::SportsTeamNotFound }
+
+      it 'should return 200' do
+        do_post
+        expect(response.status).to eq 200
+      end
+
+      it 'should return error message to Slack' do
+        do_post
+        expect(response.body).to match(/didn't recognize that team/)
+      end
+    end
+
+    context 'when PickError::SportsTeamNotScheduled raised' do
+      before(:each) { allow(Pick).to receive(:create_for_user).and_raise PickError::SportsTeamNotScheduled }
+
+      it 'should return 200' do
+        do_post
+        expect(response.status).to eq 200
+      end
+
+      it 'should return error message to Slack' do
+        do_post
+        expect(response.body).to match(/don't see that team scheduled to play today/)
+      end
+    end
   end
 end

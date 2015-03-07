@@ -18,6 +18,8 @@ RSpec.describe Pick, type: :model do
 
     let(:new_pick) { Pick.last }
 
+    before(:each) { allow_any_instance_of(SportsTeam).to receive(:playing_today?).and_return(true) }
+
     it 'should create a new Pick' do
       expect { do_create }.to change { Pick.count }.by(1)
     end
@@ -41,6 +43,14 @@ RSpec.describe Pick, type: :model do
 
     context 'when sports team does not exist' do
       let(:team_uid) { 'foo' }
+
+      it 'should raise PickError' do
+        expect { do_create }.to raise_error PickError
+      end
+    end
+
+    context 'when sports team is not playing today' do
+      before(:each) { allow_any_instance_of(SportsTeam).to receive(:playing_today?).and_return(false) }
 
       it 'should raise PickError' do
         expect { do_create }.to raise_error PickError

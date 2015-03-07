@@ -12,7 +12,7 @@ RSpec.describe Api::V1::PicksController, type: :controller do
       u
     end
 
-    let!(:nba_team) { FactoryGirl.create(:nba_team, uid: 'LAC') }
+    let!(:nba_team) { FactoryGirl.create(:nba_team, :scheduled_tonight, uid: 'LAC') }
 
     let(:params) do
       FactoryGirl.build(:slash_command,

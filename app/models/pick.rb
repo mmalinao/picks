@@ -6,12 +6,12 @@ class Pick < ActiveRecord::Base
 
   def self.create_for_user(user, command)
     match_data = parse_command(command)
-    fail PickError if match_data.nil? # TODO: handle error in controller
+    fail PickError::InvalidCommand if match_data.nil? # TODO: handle error in controller
 
     team = SportsTeam.find_by_uid(match_data[:sports_team_uid]) # TODO: case-insensitive
-    fail PickError if team.nil? # TODO: handle error in controller
+    fail PickError::SportsTeamNotFound if team.nil? # TODO: handle error in controller
 
-    fail PickError unless team.playing_today?
+    fail PickError::SportsTeamNotScheduled unless team.playing_today?
 
     Pick.create(slack_user: user, sports_team: team, wins_by: match_data[:points])
   end

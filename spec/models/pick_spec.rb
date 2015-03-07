@@ -36,24 +36,24 @@ RSpec.describe Pick, type: :model do
     context 'when given invalid command' do
       before(:each) { allow(Pick).to receive(:parse_command).and_return(nil) }
 
-      it 'should raise PickError' do
-        expect { do_create }.to raise_error PickError
+      it 'should raise PickError::InvalidCommand' do
+        expect { do_create }.to raise_error PickError::InvalidCommand
       end
     end
 
     context 'when sports team does not exist' do
       let(:team_uid) { 'foo' }
 
-      it 'should raise PickError' do
-        expect { do_create }.to raise_error PickError
+      it 'should raise PickError::SportsTeamNotFound' do
+        expect { do_create }.to raise_error PickError::SportsTeamNotFound
       end
     end
 
     context 'when sports team is not playing today' do
       before(:each) { allow_any_instance_of(SportsTeam).to receive(:playing_today?).and_return(false) }
 
-      it 'should raise PickError' do
-        expect { do_create }.to raise_error PickError
+      it 'should raise PickError::SportsTeamNotScheduled' do
+        expect { do_create }.to raise_error PickError::SportsTeamNotScheduled
       end
     end
   end
